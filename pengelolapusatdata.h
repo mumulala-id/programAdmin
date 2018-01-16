@@ -5,17 +5,22 @@
 #include <QtSql/QSqlDatabase>
 #include <QDir>
 #include "anggota.h"
+#include <QStandardPaths>
+class pengelolapusatdata : public QObject
 
-class pengelolapusatdata
 {
+    Q_OBJECT
+
 public:
-    pengelolapusatdata();
+  enum hubungan{tambah_personil,tampil_personil,inverntaris};
+  explicit  pengelolapusatdata(QObject*parent=0);
+    pengelolapusatdata(hubungan,QObject *parent=0);
+
 
 private :
     QSqlDatabase pusat_data;
     QString nama_pusat_data = "pusatdata.db";
-    QString jalur_pusat_data = QDir::homePath()+"/programadmin";
-   // QString berkas_pusat_data;
+    QString jalur_pusat_data = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 
 private slots:
     void tetapkanNamaPusatData(QString);
@@ -31,8 +36,10 @@ public slots:
     void kumpulkan();
     void tutup();
     void sisipkanKeTabel();
-    void tambahAnggota(anggota);
-    void tambahAnggota(QList<anggota>);
+    void tambahAnggota(anggota*);
+    void perbaruiAnggota(QString, anggota*);
+//    void tambahAnggota(QList<anggota>);
+     QSqlDatabase pusatData(){return pusat_data;}
 
 };
 

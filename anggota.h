@@ -23,7 +23,9 @@ private :
     QString nama;
     QString pangkat;
     QString jabatan;
+    QString divisi;
     QString notelp;
+    QString golongan;
     QString notelp_saudara;
     QString nama_saudara;
     QString no_sprin_gabung;
@@ -35,31 +37,38 @@ private :
     QString tempat_lahir;
     QString tanggal_lahir;
     QString agama;
+    QByteArray byte_array_foto;
 
 
 public slots :
     void tetapkanNama(const QString &);
     void tetapkanPangkat(const QString &);
     void tetapkanJabatan(const QString &);
+    void tetapkanGolongan(const QString &);
     void tetapkanNotelp(const QString &);
     void tetapkanNrp(QString);
     void tetapkanAlamat(const QString &);
-
+    void tetapkanDivisi(const QString &);
+    void tetapkanFoto(QByteArray);
     void tetapkanNoSprinGabung(const QString &);
     void tetapkanNoSprinKeluar(const QString &);
     void tetapkanTanggalGabung(QDate);
+    void tetapkanTanggalGabung(QString);
     void tetapkanTanggalKeluar(QDate);
     void tetapkanNamaSaudara(const QString &);
     void tetapkanNoTelpSaudara(const QString &_no_telp_sudara);
     void tetapkanTempatLahir(QString);
     void tetapkanTanggalLahir(QDate);
+    void tetapkanTanggalLahir(QString);
     void tetapkanAgama(QString);
 
 
     QString ambilNama();
     QString ambilNrp();
     QString ambilPangkat();
+    QString ambilDivisi();
     QString ambilJabatan();
+    QString ambilGolongan();
     QString ambilPangkatNrp();
     QString ambilNoTelp();
     QString ambilAlamat();
@@ -73,6 +82,7 @@ public slots :
     QString ambilTempatLahir();
     QString ambilTanggalLahir();
     QString ambilTempatTanggalLahir();
+    QByteArray ambilFoto();
 
 };
 

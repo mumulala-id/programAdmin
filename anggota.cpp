@@ -19,6 +19,15 @@ void anggota::tetapkanPangkat(const QString &_pangkat ){
 void anggota::tetapkanJabatan(const QString &_jabatan){
     jabatan = _jabatan;
 }
+void anggota::tetapkanGolongan(const QString &_golongan){
+    golongan = _golongan;
+}
+
+void anggota::tetapkanDivisi(const QString &_divisi){
+
+    divisi = _divisi;
+
+}
 
 void anggota::tetapkanNotelp(const QString &_notelp){
     notelp = _notelp;
@@ -38,6 +47,12 @@ void anggota::tetapkanNoSprinKeluar(const QString &_no_sprin_keluar){
 
 void anggota::tetapkanTanggalGabung(QDate _tanggal_gabung){
     tanggal_gabung = _tanggal_gabung;
+}
+
+void anggota::tetapkanTanggalGabung(QString _tanggal){
+
+    tanggal_gabung = QDate::fromString(_tanggal, "dd/MM/yyyy");
+
 }
 
 void anggota::tetapkanTanggalKeluar(QDate _tanggal_keluar){
@@ -72,9 +87,16 @@ QString anggota::ambilJabatan(){
     return jabatan;
 }
 
+QString anggota::ambilDivisi(){
+
+    return divisi;
+
+}
+
 QString anggota::ambilNoTelp(){
     return notelp;
 }
+
 
 QString anggota::ambilAlamat(){
     return alamat;
@@ -99,6 +121,11 @@ QString anggota::ambilAgama(){
 
 void anggota::tetapkanTanggalLahir(QDate _tanggal_lahir){
     tanggal_lahir = _tanggal_lahir.toString(("dd/MM/yyyy"));
+
+}
+
+void anggota::tetapkanTanggalLahir(QString _tanggal_lahir){
+    tanggal_lahir = _tanggal_lahir;
 
 }
 
@@ -134,4 +161,19 @@ QString anggota::ambilNoSprinGabung(){
 
 QString anggota::ambilNoSprinKeluar(){
     return no_sprin_keluar;
+}
+
+QString anggota::ambilGolongan(){
+    return golongan;
+}
+
+void anggota::tetapkanFoto(QByteArray _foto){
+
+    byte_array_foto = _foto;
+
+
+}
+
+QByteArray anggota::ambilFoto(){
+    return byte_array_foto;
 }

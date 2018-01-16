@@ -2,11 +2,29 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
-pengelolapusatdata::pengelolapusatdata()
+pengelolapusatdata::pengelolapusatdata(QObject *parent):
+    QObject(parent)
 {
 
-    pusat_data = QSqlDatabase::addDatabase("QSQLITE");
-    pusat_data.setDatabaseName(ambilNamaPusatData());
+//    pusat_data = QSqlDatabase::addDatabase("QSQLITE","con1");
+//    pusat_data.setDatabaseName(ambilNamaPusatData());
+
+}
+
+pengelolapusatdata::pengelolapusatdata(hubungan hub, QObject *parent):
+    QObject(parent)
+{
+if(hub==hubungan::tambah_personil){
+     pusat_data  =QSqlDatabase::database("tambah_personil");
+}
+
+     else if(hub==hubungan::tampil_personil){
+            pusat_data  =QSqlDatabase::database("tampil_personil");
+
+     }
+
+ pusat_data.setDatabaseName(ambilNamaPusatData());
+// qDebug()<<addin_path;
 
 }
 
@@ -44,13 +62,13 @@ bool pengelolapusatdata::bukaPusatData(){
 bool pengelolapusatdata::buatTabel(){
     
     QSqlQuery query(pusat_data);
-    query.prepare("CREATE TABLE IF NOT EXISTS TABEL1 (NRP INTEGER UNIQUE PRIMARY KEY, NAMA TEXT, TEMPATLAHIR TEXT, TANGGALLAHIR TEXT, AGAMA TEXT, PANGKAT TEXT, JABATAN TEXT, NOTELP TEXT, ALAMAT TEXT, NOSPRINGABUNG TEXT, NOSPRINKELUAR TEXT,TANGGALGABUNG TEXT, TANGGALKELUAR TEXT, NAMASAUDARA TEXT, NOTELPSAUDARA TEXT)");
+    query.prepare("CREATE TABLE IF NOT EXISTS ANGGOTA ( NAMA TEXT, NRP TEXT, PANGKAT TEXT, PANGKATNRP TEXT, GOLONGAN TEXT, DIVISI TEXT,  JABATAN TEXT, TEMPATLAHIR TEXT, TANGGALLAHIR TEXT, AGAMA TEXT,   NOTELP TEXT, ALAMAT TEXT, NOSPRINGABUNG TEXT, TANGGALGABUNG TEXT,NOSPRINKELUAR TEXT, TANGGALKELUAR TEXT, NAMASAUDARA TEXT, NOTELPSAUDARA TEXT, FOTO BLOB)");
     
     if(query.exec()){
         qDebug()<<"berhasil buat tabel";
             return true;}
     else{
-        qDebug()<<"gagal buat tabel"<<pusat_data.lastError();
+        qDebug()<<"gagal buat tabel"<<query.lastError();
 
 
     return false;}
@@ -77,29 +95,87 @@ void pengelolapusatdata::kumpulkan(){
 }
 
 QString pengelolapusatdata::ambilNamaPusatData(){
-    return jalur_pusat_data+"/"+nama_pusat_data;
+return jalur_pusat_data+QDir::separator()+nama_pusat_data;
+
 }
 
 
-void pengelolapusatdata::tambahAnggota(anggota _anggota){
+void pengelolapusatdata::tambahAnggota(anggota *_anggota){
+    qDebug()<<_anggota->ambilNrp()<<_anggota->ambilTanggalLahir();
 
     QSqlQuery query(pusat_data);
-    query.prepare("INSERT INTO TABLE1 (NRP, NAMA, TEMPATLAHIR, TANGGALLAHIR, AGAMA, PANGKAT, JABATAN, NOTELP, ALAMAT, SPRINGABUNG, SPRINKELUAR, TANGGALGABUNG, TANGGALKELUAR, NAMASAUDARA, NOTELPSAUDARA) VALUES (:nrp, :nama, :tempatlahir, :agama, :pangkat, :jabatan, :notelp, :alamat, :spingabung, sprinkeluar, :tanggalgabung, :tanggalkeluar, :namasuadara,:notelpsaudara");
+    query.prepare("INSERT INTO ANGGOTA ( NAMA, NRP,TEMPATLAHIR, TANGGALLAHIR, AGAMA, GOLONGAN, PANGKAT, PANGKATNRP, DIVISI, JABATAN, NOTELP, ALAMAT, NOSPRINGABUNG, NOSPRINKELUAR, TANGGALGABUNG, TANGGALKELUAR, NAMASAUDARA, NOTELPSAUDARA, FOTO) "
+                  "VALUES ( :NAMA, :NRP, :TEMPATLAHIR, :TANGGALLAHIR, :AGAMA, :GOLONGAN, :PANGKAT, :PANGKATNRP, :DIVISI, :JABATAN, :NOTELP, :ALAMAT, :NOSPRINGABUNG, :NOSPRINKELUAR, :TANGGALGABUNG, :TANGGALKELUAR, :NAMASAUDARA, :NOTELPSAUDARA, :FOTO)");
+
+     query.bindValue(":NAMA", _anggota->ambilNama());
+     query.bindValue(":NRP", _anggota->ambilNrp());
+    query.bindValue(":TEMPATLAHIR", _anggota->ambilTempatLahir());
+    query.bindValue(":TANGGALLAHIR", _anggota->ambilTanggalLahir());
+    query.bindValue(":AGAMA", _anggota->ambilAgama());
+    query.bindValue(":GOLONGAN", _anggota->ambilGolongan());
+    query.bindValue(":PANGKAT", _anggota->ambilPangkat());
+    query.bindValue(":PANGKATNRP", _anggota->ambilPangkatNrp());
+     query.bindValue(":DIVISI", _anggota->ambilDivisi());
+    query.bindValue(":JABATAN", _anggota->ambilJabatan());
+    query.bindValue(":NOTELP", _anggota->ambilNoTelp());
+    query.bindValue(":ALAMAT", _anggota->ambilAlamat());
+    query.bindValue(":NOSPRINGABUNG", _anggota->ambilNoSprinGabung());
+    query.bindValue(":NOSPRINKELUAR", _anggota->ambilNoSprinKeluar());
+    query.bindValue(":TANGGALGABUNG", _anggota->ambilTanggalGabung());
+    query.bindValue(":TANGGALKELUAR", _anggota->ambilTanggalKeluar());
+    query.bindValue(":NAMASAUDARA", _anggota->ambilNamaSaudara());
+    query.bindValue(":NOTELPSAUDARA", _anggota->ambilNoTelpSaudara());
+    query.bindValue(":FOTO", _anggota->ambilFoto());
+
+    if(!query.exec()){
+        qDebug()<<"gagal";
+        qDebug()<<pusat_data.lastError();
+    }
+    else
+        qDebug()<<"berhasil";
+    }
+
+void pengelolapusatdata::tutup(){
 
 
-    query.bindValue(":nrp", _anggota.ambilNrp());
-    query.bindValue(":nama", _anggota.ambilNama());
-    query.bindValue(":tempatlahir", _anggota.ambilTempatLahir());
-    query.bindValue(":tanggallahir", _anggota.ambilTanggalLahir());
-    query.bindValue(":agama", _anggota.ambilAgama());
-    query.bindValue(":pangkat", _anggota.ambilPangkat());
-    query.bindValue(":jabatan", _anggota.ambilJabatan());
-    query.bindValue(":notelp", _anggota.ambilNoTelp());
-    query.bindValue(":alamat", _anggota.ambilAlamat());
-    query.bindValue(":springabung", _anggota.ambilNoSprinGabung());
-    query.bindValue(":sprinkeluar", _anggota.ambilNoSprinKeluar());
-    query.bindValue(":tanggalgabung", _anggota.ambilTanggalGabung());
-    query.bindValue(":tanggalkeluar", _anggota.ambilTanggalKeluar());
-    query.bindValue(":namasaudara", _anggota.ambilNamaSaudara());
-    query.bindValue(":notelpsaudara", _anggota.ambilNoTelpSaudara());
+}
+
+void pengelolapusatdata::perbaruiAnggota(QString nrp_lama,  anggota *_anggota){
+
+    QSqlQuery query(pusat_data);
+    query.prepare("UPDATE ANGGOTA SET  NAMA=:NAMA, NRP=:NRP,TEMPATLAHIR=:TEMPATLAHIR, TANGGALLAHIR=:TANGGALLAHIR, AGAMA=:AGAMA, GOLONGAN=:GOLONGAN, PANGKAT=:PANGKAT, PANGKATNRP=:PANGKATNRP, DIVISI=:DIVISI, JABATAN=:JABATAN, NOTELP=:NOTELP, ALAMAT=:ALAMAT, NOSPRINGABUNG=:NOSPRINGABUNG, NOSPRINKELUAR=:NOSPRINKELUAR, TANGGALGABUNG=:TANGGALGABUNG, TANGGALKELUAR=:TANGGALKELUAR, NAMASAUDARA=:NAMASAUDARA, NOTELPSAUDARA=:NOTELPSAUDARA, FOTO=:FOTO WHERE NRP ="+nrp_lama);
+
+
+    query.bindValue(":NAMA", _anggota->ambilNama());
+    query.bindValue(":NRP", _anggota->ambilNrp());
+    query.bindValue(":TEMPATLAHIR", _anggota->ambilTempatLahir());
+    query.bindValue(":TANGGALLAHIR", _anggota->ambilTanggalLahir());
+    query.bindValue(":AGAMA", _anggota->ambilAgama());
+    query.bindValue(":GOLONGAN", _anggota->ambilGolongan());
+    query.bindValue(":PANGKAT", _anggota->ambilPangkat());
+    query.bindValue(":PANGKATNRP", _anggota->ambilPangkatNrp());
+     query.bindValue(":DIVISI", _anggota->ambilDivisi());
+    query.bindValue(":JABATAN", _anggota->ambilJabatan());
+    query.bindValue(":NOTELP", _anggota->ambilNoTelp());
+    query.bindValue(":ALAMAT", _anggota->ambilAlamat());
+    query.bindValue(":NOSPRINGABUNG", _anggota->ambilNoSprinGabung());
+    query.bindValue(":NOSPRINKELUAR", _anggota->ambilNoSprinKeluar());
+    query.bindValue(":TANGGALGABUNG", _anggota->ambilTanggalGabung());
+    query.bindValue(":TANGGALKELUAR", _anggota->ambilTanggalKeluar());
+    query.bindValue(":NAMASAUDARA", _anggota->ambilNamaSaudara());
+    query.bindValue(":NOTELPSAUDARA", _anggota->ambilNoTelpSaudara());
+    query.bindValue(":FOTO", _anggota->ambilFoto());
+
+    if(!query.exec()){
+        qDebug()<<"pembaruan gagal";
+        qDebug()<<pusat_data.lastError();
+    }
+    else
+        qDebug()<<"pembaruan berhasil";
+
+}
+
+void pengelolapusatdata::sisipkanKeTabel(){
+
+
 }

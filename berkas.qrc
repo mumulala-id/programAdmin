@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>berkas/namakotadankabupaten.txt</file>
+        <file>berkas/ikon/anggota.png</file>
+        <file>berkas/ikon/ikon_foto.png</file>
+        <file>berkas/ikon/dokumen.png</file>
+        <file>berkas/ikon/borgol.png</file>
+        <file>berkas/ikon/kapal.png</file>
+    </qresource>
+</RCC>

@@ -177,3 +177,47 @@ void anggota::tetapkanFoto(QByteArray _foto){
 QByteArray anggota::ambilFoto(){
     return byte_array_foto;
 }
+
+void anggota::tetapkanStatus(status _status){
+    m_status = _status;
+}
+
+QString anggota::ambilStatus(){
+    switch (m_status){
+   case Ijin:
+        _status = "IJIN";
+        break;
+    case Sakit:
+        _status = "SAKIT";
+        break;
+    case Dinas:
+        _status = "DINAS";
+        break;
+    case Pendidikan:
+        _status = "PENDIDIKAN";
+        break;
+    case Cuti:
+        _status = "CUTI";
+        break;
+    case LepasDinas:
+        _status = " LEPAS DINAS";
+        break;
+    case TanpaKeterangan:
+        _status = "TANPA KETERANGAN";
+         break;
+    default:
+    _status="";
+
+    }
+    return _status;
+}
+
+
+void anggota::tetapkanDerajat(QString _derajat){
+
+    derajat = _derajat;
+}
+
+QString anggota::ambilDerajat(){
+    return derajat;
+}

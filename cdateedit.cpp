@@ -18,11 +18,9 @@ CDateEdit::CDateEdit(QWidget *parent)
     kombo_tahun->setMaxVisibleItems(10);
 
     kombo_bulan = new QComboBox(this);
-    QStringList daftar_bulan;
-  daftar_bulan <<"Januari"<<"Pebruari"<<"Maret"<<"Aprli"<<"Mei"<<"Juni"
-              <<"Juli"<<"Agustus"<<"September"<<"Oktober"<<"Nopember"<<"Desember";
 
-    kombo_bulan->addItems(daftar_bulan);
+    for(int bulan=1;bulan<=12;bulan++)
+        kombo_bulan->addItem(QDate::longMonthName(bulan).toUpper());
 
     kombo_tanggal = new QComboBox(this);
     kombo_tanggal->setAutoFillBackground(1);

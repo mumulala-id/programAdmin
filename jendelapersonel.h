@@ -8,7 +8,8 @@
 #include <QSqlQueryModel>
 #include "anggota.h"
 #include "pengelolapusatdata.h"
-#include "tablemodel.h"
+//#include "tablemodel.h"
+#include <QTableWidget>
 class jendelaPersonel : public QDialog
 {
     Q_OBJECT
@@ -20,8 +21,8 @@ QPushButton *tombol_sunting ;
 QPushButton *tombol_pisah;
 QPushButton *tombol_tambah;
 QPushButton *tombol_profil;
-    QTableView *tabel;
-    TableModel *model;
+    QTableWidget *tabel;
+   // TableModel *model;
     pengelolapusatdata *pengolah;
     QSqlQueryModel *m_model;
 private slots:
@@ -31,6 +32,7 @@ private slots:
     QString ambilNrp();
     anggota *ambilAnggota(QString);
     void segarkan();
+    void ambilData();
 public slots:
 
 };

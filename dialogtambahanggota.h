@@ -43,7 +43,7 @@ private:
     QLineEdit *isian_nama_saudara, *isian_notelp_saudara;
     QLabel *foto;
       bool fotoDiTambahkan;
-    QString berkas_foto;
+    QString derajat;
 private slots:
     void ambilDaftarJabatan(int);
     void pilihPangkat(int);

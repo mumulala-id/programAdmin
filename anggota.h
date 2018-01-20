@@ -18,6 +18,7 @@ class anggota : public QObject
     Q_OBJECT
 public:
     explicit anggota(QObject *parent = nullptr);
+    enum status{Ijin, Dinas, Sakit, Pendidikan, TanpaKeterangan, LepasDinas, Cuti};
 
 private :
     QString nama;
@@ -38,6 +39,9 @@ private :
     QString tanggal_lahir;
     QString agama;
     QByteArray byte_array_foto;
+    status m_status;
+    QString _status;
+    QString derajat;
 
 
 public slots :
@@ -61,6 +65,8 @@ public slots :
     void tetapkanTanggalLahir(QDate);
     void tetapkanTanggalLahir(QString);
     void tetapkanAgama(QString);
+    void tetapkanStatus(status);
+    void tetapkanDerajat(QString);
 
 
     QString ambilNama();
@@ -83,6 +89,8 @@ public slots :
     QString ambilTanggalLahir();
     QString ambilTempatTanggalLahir();
     QByteArray ambilFoto();
+    QString ambilStatus();
+    QString ambilDerajat();
 
 };
 

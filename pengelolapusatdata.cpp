@@ -62,7 +62,7 @@ bool pengelolapusatdata::bukaPusatData(){
 bool pengelolapusatdata::buatTabel(){
     
     QSqlQuery query(pusat_data);
-    query.prepare("CREATE TABLE IF NOT EXISTS ANGGOTA ( NAMA TEXT, NRP TEXT, PANGKAT TEXT, PANGKATNRP TEXT, GOLONGAN TEXT, DIVISI TEXT,  JABATAN TEXT, TEMPATLAHIR TEXT, TANGGALLAHIR TEXT, AGAMA TEXT,   NOTELP TEXT, ALAMAT TEXT, NOSPRINGABUNG TEXT, TANGGALGABUNG TEXT,NOSPRINKELUAR TEXT, TANGGALKELUAR TEXT, NAMASAUDARA TEXT, NOTELPSAUDARA TEXT, FOTO BLOB)");
+    query.prepare("CREATE TABLE IF NOT EXISTS ANGGOTA ( NAMA TEXT, NRP TEXT, PANGKAT TEXT, GOLONGAN TEXT, DIVISI TEXT,  JABATAN TEXT,DERAJAT TEXT, STATUS TEXT, TEMPATLAHIR TEXT, TANGGALLAHIR TEXT, AGAMA TEXT,   NOTELP TEXT, ALAMAT TEXT, NOSPRINGABUNG TEXT, TANGGALGABUNG TEXT,NOSPRINKELUAR TEXT, TANGGALKELUAR TEXT, NAMASAUDARA TEXT, NOTELPSAUDARA TEXT, FOTO BLOB)");
     
     if(query.exec()){
         qDebug()<<"berhasil buat tabel";
@@ -101,11 +101,10 @@ return jalur_pusat_data+QDir::separator()+nama_pusat_data;
 
 
 void pengelolapusatdata::tambahAnggota(anggota *_anggota){
-    qDebug()<<_anggota->ambilNrp()<<_anggota->ambilTanggalLahir();
 
     QSqlQuery query(pusat_data);
-    query.prepare("INSERT INTO ANGGOTA ( NAMA, NRP,TEMPATLAHIR, TANGGALLAHIR, AGAMA, GOLONGAN, PANGKAT, PANGKATNRP, DIVISI, JABATAN, NOTELP, ALAMAT, NOSPRINGABUNG, NOSPRINKELUAR, TANGGALGABUNG, TANGGALKELUAR, NAMASAUDARA, NOTELPSAUDARA, FOTO) "
-                  "VALUES ( :NAMA, :NRP, :TEMPATLAHIR, :TANGGALLAHIR, :AGAMA, :GOLONGAN, :PANGKAT, :PANGKATNRP, :DIVISI, :JABATAN, :NOTELP, :ALAMAT, :NOSPRINGABUNG, :NOSPRINKELUAR, :TANGGALGABUNG, :TANGGALKELUAR, :NAMASAUDARA, :NOTELPSAUDARA, :FOTO)");
+    query.prepare("INSERT INTO ANGGOTA ( NAMA, NRP,TEMPATLAHIR, TANGGALLAHIR, AGAMA, GOLONGAN, PANGKAT, DIVISI, JABATAN, DERAJAT, STATUS,NOTELP, ALAMAT, NOSPRINGABUNG, NOSPRINKELUAR, TANGGALGABUNG, TANGGALKELUAR, NAMASAUDARA, NOTELPSAUDARA, FOTO) "
+                  "VALUES ( :NAMA, :NRP, :TEMPATLAHIR, :TANGGALLAHIR, :AGAMA, :GOLONGAN, :PANGKAT,  :DIVISI, :JABATAN, :DERAJAT,:STATUS, :NOTELP, :ALAMAT, :NOSPRINGABUNG, :NOSPRINKELUAR, :TANGGALGABUNG, :TANGGALKELUAR, :NAMASAUDARA, :NOTELPSAUDARA, :FOTO)");
 
      query.bindValue(":NAMA", _anggota->ambilNama());
      query.bindValue(":NRP", _anggota->ambilNrp());
@@ -114,9 +113,11 @@ void pengelolapusatdata::tambahAnggota(anggota *_anggota){
     query.bindValue(":AGAMA", _anggota->ambilAgama());
     query.bindValue(":GOLONGAN", _anggota->ambilGolongan());
     query.bindValue(":PANGKAT", _anggota->ambilPangkat());
-    query.bindValue(":PANGKATNRP", _anggota->ambilPangkatNrp());
+//    query.bindValue(":PANGKATNRP", _anggota->ambilPangkatNrp());
      query.bindValue(":DIVISI", _anggota->ambilDivisi());
     query.bindValue(":JABATAN", _anggota->ambilJabatan());
+    query.bindValue(":STATUS", _anggota->ambilStatus());
+    query.bindValue(":DERAJAT",_anggota->ambilDerajat());
     query.bindValue(":NOTELP", _anggota->ambilNoTelp());
     query.bindValue(":ALAMAT", _anggota->ambilAlamat());
     query.bindValue(":NOSPRINGABUNG", _anggota->ambilNoSprinGabung());
@@ -143,8 +144,7 @@ void pengelolapusatdata::tutup(){
 void pengelolapusatdata::perbaruiAnggota(QString nrp_lama,  anggota *_anggota){
 
     QSqlQuery query(pusat_data);
-    query.prepare("UPDATE ANGGOTA SET  NAMA=:NAMA, NRP=:NRP,TEMPATLAHIR=:TEMPATLAHIR, TANGGALLAHIR=:TANGGALLAHIR, AGAMA=:AGAMA, GOLONGAN=:GOLONGAN, PANGKAT=:PANGKAT, PANGKATNRP=:PANGKATNRP, DIVISI=:DIVISI, JABATAN=:JABATAN, NOTELP=:NOTELP, ALAMAT=:ALAMAT, NOSPRINGABUNG=:NOSPRINGABUNG, NOSPRINKELUAR=:NOSPRINKELUAR, TANGGALGABUNG=:TANGGALGABUNG, TANGGALKELUAR=:TANGGALKELUAR, NAMASAUDARA=:NAMASAUDARA, NOTELPSAUDARA=:NOTELPSAUDARA, FOTO=:FOTO WHERE NRP ="+nrp_lama);
-
+    query.prepare("UPDATE ANGGOTA SET  NAMA=:NAMA, NRP=:NRP,TEMPATLAHIR=:TEMPATLAHIR, TANGGALLAHIR=:TANGGALLAHIR, AGAMA=:AGAMA, GOLONGAN=:GOLONGAN, PANGKAT=:PANGKAT,  DIVISI=:DIVISI, JABATAN=:JABATAN, STATUS=:STATUS, DERAJAT=:DERAJAT, NOTELP=:NOTELP, ALAMAT=:ALAMAT, NOSPRINGABUNG=:NOSPRINGABUNG, NOSPRINKELUAR=:NOSPRINKELUAR, TANGGALGABUNG=:TANGGALGABUNG, TANGGALKELUAR=:TANGGALKELUAR, NAMASAUDARA=:NAMASAUDARA, NOTELPSAUDARA=:NOTELPSAUDARA, FOTO=:FOTO WHERE NRP ="+nrp_lama);
 
     query.bindValue(":NAMA", _anggota->ambilNama());
     query.bindValue(":NRP", _anggota->ambilNrp());
@@ -153,8 +153,9 @@ void pengelolapusatdata::perbaruiAnggota(QString nrp_lama,  anggota *_anggota){
     query.bindValue(":AGAMA", _anggota->ambilAgama());
     query.bindValue(":GOLONGAN", _anggota->ambilGolongan());
     query.bindValue(":PANGKAT", _anggota->ambilPangkat());
-    query.bindValue(":PANGKATNRP", _anggota->ambilPangkatNrp());
-     query.bindValue(":DIVISI", _anggota->ambilDivisi());
+    query.bindValue(":STATUS",_anggota->ambilStatus());
+    query.bindValue(":DERAJAT",_anggota->ambilDerajat());
+    query.bindValue(":DIVISI", _anggota->ambilDivisi());
     query.bindValue(":JABATAN", _anggota->ambilJabatan());
     query.bindValue(":NOTELP", _anggota->ambilNoTelp());
     query.bindValue(":ALAMAT", _anggota->ambilAlamat());

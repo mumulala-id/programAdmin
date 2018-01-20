@@ -9,6 +9,7 @@
 #include "liststringparser.h"
  #include <QMessageBox>
 #include <QBuffer>
+#include <QMap>
 
 dialogTambahAnggota::dialogTambahAnggota(QWidget *parent):
     QDialog(parent)
@@ -333,7 +334,7 @@ void dialogTambahAnggota::perikasInt(const QString &_string){
 
 void dialogTambahAnggota::ambilFoto(){
 
-    berkas_foto = QFileDialog::getOpenFileName(this, "Pilih Foto", QDir::homePath(), "Berkas Foto (*.jpg *.png) ");
+   QString berkas_foto = QFileDialog::getOpenFileName(this, "Pilih Foto", QDir::homePath(), "Berkas Foto (*.jpg *.png) ");
 
     if(!berkas_foto.isEmpty()){
         fotoDiTambahkan=true;
@@ -384,6 +385,58 @@ void dialogTambahAnggota::simpan(){
             return;
 }
 
+    //penentuan derajat
+    QMap<QString, QChar>derajat_divisi;
+    derajat_divisi["KOMANDAN"]='A';
+    derajat_divisi["WAKIL KOMANDAN"]='B';
+    derajat_divisi["KOMLEK"]='C';
+    derajat_divisi["KESEHATAN"]='D';
+    derajat_divisi["NAUTIKA"]='E';
+    derajat_divisi["TEKNIKA"]='F';
+    derajat_divisi["PELAYAN"]='G';
+
+    derajat.append(derajat_divisi[pilihan_divisi->currentText()]);
+
+
+    QMap<QString, QChar>derajat_jabatan;
+    derajat_divisi["KOMANDAN"]='A';
+    derajat_divisi["PS. KOMANDAN"]='A';
+    derajat_divisi["WAKIL KOMANDAN"]='B';
+    derajat_divisi["PS. WAKIL KOMANDAN"]='B';
+    derajat_jabatan["PA NOPS"]='C';
+    derajat_jabatan["PS. PA NOPS"]='C';
+    derajat_jabatan["PA NAT I"]='D';
+    derajat_jabatan["PS. PA NAT I"]='D';
+    derajat_jabatan["PA NAT II"]='E';
+    derajat_jabatan["PS. PA NAT II"]='E';
+    derajat_jabatan["PA NAT III"]='F';
+    derajat_jabatan["PS. PA NAT III"]='F';
+    derajat_jabatan["PA NAT"]='G';
+    derajat_jabatan["BA NAT I"]='H';
+    derajat_jabatan["BA NAT II"]='I';
+    derajat_jabatan["BA NAT III"]='J';
+    derajat_jabatan["BA NAT"]='K';
+    derajat_jabatan["TA NAT"]='L';
+
+    derajat_jabatan["KKM"]='A';
+    derajat_jabatan["PS. KKM"]='A';
+    derajat_jabatan["PA TEK I"]='B';
+    derajat_jabatan["PS. PA TEK I"]='B';
+    derajat_jabatan["PA TEK II"]='C';
+    derajat_jabatan["PS. PA TEK II"]='C';
+    derajat_jabatan["PA TEK III"]='D';
+    derajat_jabatan["PS. PA TEK III"]='D';
+    derajat_jabatan["PA TEK"]='E';
+    derajat_jabatan["BA TEK I"]='F';
+    derajat_jabatan["BA TEK II"]='G';
+    derajat_jabatan["BA TEK III"]='H';
+    derajat_jabatan["BA TEK"]='I';
+    derajat_jabatan["TA TEK"]='J';
+
+    derajat.append(derajat_jabatan[pilihan_jabatan->currentText()]);
+
+
+    qDebug()<<"DERAJAT"<<derajat;
 
     anggota *_anggota = new anggota(this);
     _anggota->tetapkanNama(isian_nama->text());
@@ -396,6 +449,7 @@ void dialogTambahAnggota::simpan(){
     _anggota->tetapkanTempatLahir(isian_tempat_lahir->text());
     _anggota->tetapkanTanggalLahir(date_edit->ambilTanggal());
     _anggota->tetapkanAlamat(isian_alamat->toPlainText());
+    _anggota->tetapkanDerajat(derajat);
     _anggota->tetapkanNotelp(isian_no_telp->text());
     _anggota->tetapkanNoSprinGabung(ambilNoSprinGabung());
     _anggota->tetapkanTanggalGabung(ambilTanggalSprinGabung());
@@ -404,7 +458,6 @@ void dialogTambahAnggota::simpan(){
 
     //ambil foto
     if(fotoDiTambahkan){
-//    QPixmap pix = QPixmap(berkas_foto);
     QPixmap pix = *foto->pixmap();
 
     QByteArray in_byte_array;
